@@ -12,6 +12,44 @@
                 text-align: center;
                 border: none;
           }
+          label{
+                font-family: sans-serif;
+                font-size: 20px;
+                color: #00d6b2
+            }
+            
+        button{
+                  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  background-image: none;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-family: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+            }
+            .destroy{
+                position: relative;
+                top: 0;
+                right: 10px;
+                bottom: 0;
+                width: 40px;
+                height: 40px;
+                margin: auto 0;
+                font-size: 22px;
+                color: #a88a8a;
+                padding-bottom: 6px;
+                -webkit-transition: all 0.2s;
+                -moz-transition: all 0.2s;
+                -ms-transition: all 0.2s;
+                -o-transition: all 0.2s;
+                transition: all 0.2s;
+                          }    
       </style>
       <template repeat="{{todo,todoIndex in todos}}">    
     <li>
