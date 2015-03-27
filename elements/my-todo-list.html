@@ -43,12 +43,15 @@
             },
             editTodo:function(event,detail,sender){
                 console.log(sender.attributes['data-index'].value);
+                sender.style.display='none';
+                sender.parentNode.querySelector('input[type=text]').style.display='block';
                 
             },
             todoEditedDone:function(event,detail,sender){
                 if(event.keyCode === 13){
                     this.todos[sender.attributes['data-index'].value].todoText=sender.value;
-                   
+                    sender.style.display='none';
+                    sender.parentNode.querySelector('label').style.display='block';
                 }
             },
             checkedChanged:function(oldvalue,newvalue){
