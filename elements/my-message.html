@@ -1,0 +1,79 @@
+
+<polymer-element name="my-message-element" attributes="text todos checked">
+    
+  <template>
+      <style>
+        #new-todo {
+	padding: 16px 0px 16px 0px;
+	border: none;
+	background: rgba(0, 0, 0, 0.003);
+	box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+        width: 100%;
+}
+input::-webkit-input-placeholder {
+	font-style: italic;
+	font-weight: 300;
+        font-size: large;
+	color: #e6e6e6;
+        text-align: center;
+        line-height: 100%;
+        
+}
+
+input::-moz-placeholder {
+	font-style: italic;
+	font-weight: 300;
+        font-size: large;
+	color: #e6e6e6;
+        text-align: center;
+        height: 100%;
+        line-height: 100%;
+}
+
+input::input-placeholder {
+	font-style: italic;
+	font-weight: 300;
+        font-size: large;
+	color: #e6e6e6;
+       text-align: center;
+       height: 100%;
+        line-height: 100%;
+}
+
+    </style>
+        <div id="todo-form">        
+            <input type="checkbox" on-change="{{checkAll}}" />
+            <input autocomplete="off" type="text" id="new-todo" on-keypress="{{submitTodo}}" name="message" placeholder="What needs to be done?" value="{{text}}" />                   
+      </div>
+    
+  </template>
+    <script>
+        Polymer('my-message-element',{
+            publish:{
+                checked:false
+            },
+            submitTodo:function(e,detail,sender){
+                if(e.keyCode === 13){
+                sender.value="";    
+                sender.blur();    
+                var template = document.querySelector('template[is=auto-binding]');
+                template.incompleteTodo=0;
+                this.todos.push({todoText:template.text,status:false});
+                for(var i=0;i<template.todos.length;i++){
+                    if(!template.todos[i].status){
+                        template.incompleteTodo+=1;
+                    }
+                }    
+                     }
+                
+                
+            },
+            checkAll:function(event,detail,sender){
+                this.checked=sender.checked;
+            },
+        });
+    //    submitTodo:function(event,detail,sender){
+
+  //          }
+    </script>
+</polymer-element>
