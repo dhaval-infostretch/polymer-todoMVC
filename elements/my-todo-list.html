@@ -1,13 +1,26 @@
 
 <polymer-element name="todo-list" attributes="todos checked">
   <template>
+      <style>
+          .view{
+              height: 30px;
+          }
+          .toggle{
+                top: 13px;
+                width: 30px;
+                height: 17px;
+                text-align: center;
+                border: none;
+          }
+      </style>
       <template repeat="{{todo,todoIndex in todos}}">    
     <li>
-<div class="view">
+        <div class="view" on-mouseover="{{displayButton}}" on-mouseout="{{hideButton}}">
       <input class="toggle" type="checkbox" value="done" data-index="{{todoIndex}}" on-change="{{completeTodo}}" />
       <label on-dblclick="{{editTodo}}" data-index="{{todoIndex}}" style="text-decoration:none">{{todo.todoText}}</label>
       <input type="text" data-index="{{todoIndex}}" on-keypress="{{todoEditedDone}}" value="{{todo.todoText}}" style="display:none" />
-      <button class="destroy" on-click="{{cancelTodo}}">X</button>
+      
+          <button style="float: right;display:none" class="destroy" on-click="{{cancelTodo}}">X</button>
 </div>
     </li>
       </template>
@@ -44,16 +57,23 @@
             editTodo:function(event,detail,sender){
                 console.log(sender.attributes['data-index'].value);
                 sender.style.display='none';
-                sender.parentNode.querySelector('input[type=text]').style.display='block';
+                sender.parentNode.querySelector('input[type=text]').style.display='inline';
                 
             },
             todoEditedDone:function(event,detail,sender){
                 if(event.keyCode === 13){
                     this.todos[sender.attributes['data-index'].value].todoText=sender.value;
                     sender.style.display='none';
-                    sender.parentNode.querySelector('label').style.display='block';
+                    sender.parentNode.querySelector('label').style.display='inline';
                 }
             },
+            displayButton:function(event,detail,sender){
+                sender.querySelector('button[class=destroy]').style.display='inline';
+            },
+            hideButton:function(event,detail,sender){
+                sender.querySelector('button[class=destroy]').style.display='none';
+            }
+            ,
             checkedChanged:function(oldvalue,newvalue){
                 var evt = document.createEvent("HTMLEvents");
                 evt.initEvent("change", false, true);
