@@ -20,8 +20,7 @@
             </header>
             
         <my-message-element text="{{text}}" todos="{{todos}}" checked="{{checked}}"></my-message-element>
-        <!--<my-button-element on-click={{submitTodo}}></my-button-element>-->                
-      
+       
         <todo-list id="todo-list" todos="{{todos}}" checked="{{checked}}" reflect></todo-list>      
         </section>
         <template if="{{todos.length > 0}}">
@@ -57,6 +56,5 @@
 			<p>Created by dhaval mashruwala</a></p>
 		</footer>
     </template>
-<script src="js/app.js"></script>
 </body>
 </html>
