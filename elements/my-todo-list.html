@@ -1,4 +1,5 @@
-
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <polymer-element name="todo-list" attributes="todos checked">
   <template>
       <style>
@@ -8,8 +9,7 @@
           .toggle{
                 top: 13px;
                 width: 30px;
-                height: 17px;
-                text-align: center;
+                margin-left: 2%;
                 border: none;
           }
           label{
@@ -35,6 +35,7 @@
             }
             .destroy{
                 position: relative;
+                padding: 0px;
                 top: 0;
                 right: 10px;
                 bottom: 0;
@@ -43,7 +44,6 @@
                 margin: auto 0;
                 font-size: 22px;
                 color: #a88a8a;
-                padding-bottom: 6px;
                 -webkit-transition: all 0.2s;
                 -moz-transition: all 0.2s;
                 -ms-transition: all 0.2s;
@@ -54,11 +54,11 @@
       <template repeat="{{todo,todoIndex in todos}}">    
     <li>
         <div class="view" on-mouseover="{{displayButton}}" on-mouseout="{{hideButton}}">
-      <input class="toggle" type="checkbox" value="done" data-index="{{todoIndex}}" on-change="{{completeTodo}}" />
-      <label on-dblclick="{{editTodo}}" data-index="{{todoIndex}}" style="text-decoration:none">{{todo.todoText}}</label>
+            <paper-checkbox class="toggle" value="done" data-index="{{todoIndex}}" on-change="{{completeTodo}}" checked="{{todo.status}}"></paper-checkbox>
+      <label on-dblclick="{{editTodo}}" data-index="{{todoIndex}}" style="{{todo.status?'text-decoration:line-through':'text-decoration:none'}}}">{{todo.todoText}}</label>
       <input type="text" data-index="{{todoIndex}}" on-keypress="{{todoEditedDone}}" value="{{todo.todoText}}" style="display:none" />
       
-          <button style="float: right;display:none" class="destroy" on-click="{{cancelTodo}}">X</button>
+          <paper-icon-button data-index="{{todoIndex}}" style="float: right;display:none" icon="cancel" class="destroy" on-click="{{cancelTodo}}"></paper-icon-button>
 </div>
     </li>
       </template>
@@ -66,30 +66,30 @@
     <script>
         Polymer('todo-list',{
             publish:{
-                    todos:[],
+                    todos:localStorage.getItem('todos')||[],
+                    incompleteTodo:0
+                },
+                ready:function(){
+                    
                 },
             cancelTodo:function(event,detail,sender){
-                var template = document.querySelector('template[is=auto-binding]');
-                template.todos.splice(this.todoIndex,1);
-                template.incompleteTodo=0;
-                for(var i=0;i<template.todos.length;i++){
-            if(!template.todos[i].status){
-                template.incompleteTodo+=1;
-            }
-        }
+                if(!this.todos[sender.attributes['data-index'].value].status)
+                    this.incompleteTodo -= 1;
+                    this.todos.splice(sender.attributes['data-index'].value,1);
             },
             completeTodo:function(event,detail,sender){
-                var template = document.querySelector('template[is=auto-binding]');
                 if(sender.checked || this.checked){
                     sender.parentNode.getElementsByTagName('label')[0].style.textDecoration ='line-through';
                     this.todos[sender.attributes['data-index'].value].status=true;
-                    template.incompleteTodo=template.incompleteTodo - 1;
+                    document.querySelector('core-localstorage[name=todos]').save();
+                    this.incompleteTodo=this.incompleteTodo - 1;
                 }
                 else
                 {
                     sender.parentNode.getElementsByTagName('label')[0].style.textDecoration ='none';
                     this.todos[sender.attributes['data-index'].value].status=false;
-                    template.incompleteTodo=template.incompleteTodo + 1;
+                    document.querySelector('core-localstorage[name=todos]').save();
+                    this.incompleteTodo=this.incompleteTodo + 1;
                 }
             },
             editTodo:function(event,detail,sender){
@@ -101,29 +101,32 @@
             todoEditedDone:function(event,detail,sender){
                 if(event.keyCode === 13){
                     this.todos[sender.attributes['data-index'].value].todoText=sender.value;
+                    document.querySelector('core-localstorage[name=todos]').save();
                     sender.style.display='none';
                     sender.parentNode.querySelector('label').style.display='inline';
                 }
             },
             displayButton:function(event,detail,sender){
-                sender.querySelector('button[class=destroy]').style.display='inline';
+                sender.querySelector('paper-icon-button').style.display='inline';
             },
             hideButton:function(event,detail,sender){
-                sender.querySelector('button[class=destroy]').style.display='none';
+                sender.querySelector('paper-icon-button').style.display='none';
             }
             ,
             checkedChanged:function(oldvalue,newvalue){
                 var evt = document.createEvent("HTMLEvents");
                 evt.initEvent("change", false, true);
-                if(this.shadowRoot.querySelectorAll('input[type=checkbox]')){
-                for(var i=0;i<this.shadowRoot.querySelectorAll('input[type=checkbox]').length;i++){
+                if(this.shadowRoot.querySelectorAll('paper-checkbox')){
+                for(var i=0;i<this.shadowRoot.querySelectorAll('paper-checkbox').length;i++){
                     if(this.checked){
-                        this.shadowRoot.querySelectorAll('input[type=checkbox]')[i].checked=true;
-                        this.shadowRoot.querySelectorAll('input[type=checkbox]')[i].dispatchEvent(evt);
+                        if(!this.shadowRoot.querySelectorAll('paper-checkbox')[i].checked){
+                        this.shadowRoot.querySelectorAll('paper-checkbox')[i].checked=true;
+                        this.shadowRoot.querySelectorAll('paper-checkbox')[i].dispatchEvent(evt);
+                    }
                     }
                     else{
-                        this.shadowRoot.querySelectorAll('input[type=checkbox]')[i].checked=false;
-                        this.shadowRoot.querySelectorAll('input[type=checkbox]')[i].dispatchEvent(evt);
+                        this.shadowRoot.querySelectorAll('paper-checkbox')[i].checked=false;
+                        this.shadowRoot.querySelectorAll('paper-checkbox')[i].dispatchEvent(evt);
                     }
                 }
             }

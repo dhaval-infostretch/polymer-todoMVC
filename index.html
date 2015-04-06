@@ -6,9 +6,9 @@
 <link rel="import"
       href="elements/my-message.html">
 <link rel="import"
-      href="elements/button-element.html">
-<link rel="import"
       href="elements/my-todo-list.html">
+<link rel="import"
+      href="bower_components/core-localstorage/core-localstorage.html">
 <link rel="stylesheet" href="style/main.css">
   </head>
   
@@ -17,11 +17,12 @@
         <section id="todoapp">
             <header id="header">
                 <h1>todos</h1>
-            </header>
-            
-        <my-message-element text="{{text}}" todos="{{todos}}" checked="{{checked}}"></my-message-element>
+                </header>
+            <core-localstorage name="todos" value="{{todos}}"></core-localstorage>    
+            <core-localstorage name="incompleteTodo" value="{{incompleteTodo}}"></core-localstorage>    
+        <my-message-element text="{{text}}" todos="{{todos}}" checked="{{checked}}" incompleteTodo="{{incompleteTodo}}" reflect></my-message-element>
        
-        <todo-list id="todo-list" todos="{{todos}}" checked="{{checked}}" reflect></todo-list>      
+        <todo-list id="todo-list" todos="{{todos}}" checked="{{checked}}" incompleteTodo="{{incompleteTodo}}" reflect></todo-list>      
         </section>
         <template if="{{todos.length > 0}}">
           <footer style="font-size: 20px;text-align: center; padding-right: 7px;padding-top: 10px">remaining {{incompleteTodo}} of {{todos.length}}</footer> 
@@ -56,5 +57,6 @@
 			<p>Created by dhaval mashruwala</a></p>
 		</footer>
     </template>
+  <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 </body>
 </html>
